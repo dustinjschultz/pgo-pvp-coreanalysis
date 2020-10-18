@@ -7,4 +7,6 @@ const puppeteer = require('puppeteer');
   await page.screenshot({path: 'example.png'});
 
   await browser.close();
+
+    console.log(process.argv[2]);
 })();
