@@ -26,3 +26,9 @@ yarn-error.log*
 *.sln
 *.sw*
 .vs
+
+# temp files
+/temp
+
+# debug files
+*.png
