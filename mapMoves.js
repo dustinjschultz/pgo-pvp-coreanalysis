@@ -7,7 +7,7 @@ fs.readFile('./temp/meta.txt', 'utf8', function (err, data) {
 
     fs.readFile('C:/xampp/htdocs/pvpoke/src/data/gamemaster.json', 'utf8', function (err, data) {
         gamemasterJson = JSON.parse(data);
-        mapPokemonsMovesToNumbers(meta);
+        mapMonsDisplayDataToIdData(meta);
 
         fs.writeFile('./temp/metaWithNumbers.txt', JSON.stringify(meta), (err) => {
             if (err) throw err;
@@ -16,13 +16,13 @@ fs.readFile('./temp/meta.txt', 'utf8', function (err, data) {
 
 })
 
-function mapPokemonsMovesToNumbers(thePokemonList) {
+function mapMonsDisplayDataToIdData(thePokemonList) {
     for (var currentPokemon of thePokemonList) {
-        mapPokemonMovesToNumbers(currentPokemon);
+        mapMonDisplayDataToIdData(currentPokemon);
     }
 }
 
-function mapPokemonMovesToNumbers(thePokemonEntry) {
+function mapMonDisplayDataToIdData(thePokemonEntry) {
     var gamemasterPokemon = findGamemasterPokemon(thePokemonEntry.name);
     var movesArray = thePokemonEntry.movesString.split(',');
     var moveNumbersString = "";
@@ -30,12 +30,12 @@ function mapPokemonMovesToNumbers(thePokemonEntry) {
     var fastMove = movesArray[0];
     var moveId = findGamemasterMove(fastMove.trim());
     var moveNumber = getFastMoveNumberForPokemon(moveId, gamemasterPokemon);
-    moveNumbersString += moveNumber + ",";
+    moveNumbersString += moveNumber + "-";
 
     var chargeMove1 = movesArray[1];
     moveId = findGamemasterMove(chargeMove1.trim());
     moveNumber = getChargeMoveNumberForPokemon(moveId, gamemasterPokemon);
-    moveNumbersString += moveNumber + ",";
+    moveNumbersString += moveNumber + "-";
 
     var chargeMove2 = movesArray[2];
     moveId = findGamemasterMove(chargeMove2.trim());
@@ -43,6 +43,7 @@ function mapPokemonMovesToNumbers(thePokemonEntry) {
     moveNumbersString += moveNumber;
 
     thePokemonEntry.moveNumbersString = moveNumbersString;
+    thePokemonEntry.speciesId = gamemasterPokemon.speciesId;
 }
 
 function findGamemasterPokemon(theName) {
