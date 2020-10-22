@@ -17,7 +17,8 @@ function getCoverageGrade() {
         (async () => {
             var url = generateUrl(meta[0], meta[1]);
             await page.goto(url);
-            await page.screenshot({ path: 'test.png' });
+            //await page.screenshot({ path: 'test.png' });
+            page.waitForNavigation({ waitUntil: 'networkidle2' }) // works but makes bad output
 
             // addScriptTag so it can be used on the page
             await page.addScriptTag({ content: `${getCoverageGrade}` });
