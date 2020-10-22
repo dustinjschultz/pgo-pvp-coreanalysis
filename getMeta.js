@@ -25,7 +25,9 @@ const fs = require('fs');
         rankingsContainer.childNodes.forEach((ranking) => {
             let parsedRanking = new Object();
             parsedRanking.name = ranking.querySelector(".name").textContent;
-            parsedRanking.movesString = ranking.querySelector(".moves").textContent;
+            var movesString = ranking.querySelector(".moves").textContent;
+            movesString = movesString.replace("*", ""); // remove legacy marker
+            parsedRanking.movesString = movesString;
             parsedRankings.push(parsedRanking);
         });
 
