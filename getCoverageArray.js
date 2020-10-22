@@ -3,6 +3,10 @@ const puppeteer = require('puppeteer');
 const fs = require('fs');
 
 
+function getCoverageGrade() {
+    return document.getElementsByClassName('coverage')[0].getElementsByClassName('grade')[0].textContent;
+}
+
 (async () => {
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
@@ -15,6 +19,13 @@ const fs = require('fs');
             await page.goto(url);
             await page.screenshot({ path: 'test.png' });
 
+            const out = await page.evaluateHandle(() => {
+                var grade = getCoverageGrade();
+                //var grade = document.getElementsByClassName('coverage')[0].getElementsByClassName('grade')[0].textContent;
+                return grade;
+            });
+
+            console.log(out._remoteObject.value);
             await browser.close();
         })();
     })
