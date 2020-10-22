@@ -3,24 +3,21 @@ const puppeteer = require('puppeteer');
 const fs = require('fs');
 
 
-
 (async () => {
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
 
+    var meta;
+    fs.readFile('./temp/metaWithNumbers.txt', 'utf8', function (err, data) {
+        meta = JSON.parse(data);
+        (async () => {
+            var url = generateUrl(meta[0], meta[1]);
+            await page.goto(url);
+            await page.screenshot({ path: 'test.png' });
 
-    //await page.goto('http://localhost/pvpoke/src/battle/');
-
-    fs.readFile('./temp/meta.txt', 'utf8', function (err, data) {
-        var meta = JSON.parse(data);
-
-        var url = generateUrl(meta[0], meta[1]);
-        await page.goto(url);
-        await page.screenshot({ path: 'test.png' });
-
+            await browser.close();
+        })();
     })
-
-    await browser.close();
 })();
 
 function generateUrl(theMon1, theMon2){
