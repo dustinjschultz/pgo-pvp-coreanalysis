@@ -2,7 +2,6 @@
 const puppeteer = require('puppeteer');
 const fs = require('fs');
 
-
 function getCoverageGrade() {
     return document.getElementsByClassName('coverage')[0].getElementsByClassName('grade')[0].textContent;
 }
@@ -11,6 +10,7 @@ function getCoverageGrade() {
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
 
+
     var meta;
     fs.readFile('./temp/metaWithNumbers.txt', 'utf8', function (err, data) {
         meta = JSON.parse(data);
@@ -18,6 +18,9 @@ function getCoverageGrade() {
             var url = generateUrl(meta[0], meta[1]);
             await page.goto(url);
             await page.screenshot({ path: 'test.png' });
+
+            // addScriptTag so it can be used on the page
+            await page.addScriptTag({ content: `${getCoverageGrade}` });
 
             const out = await page.evaluateHandle(() => {
                 var grade = getCoverageGrade();
@@ -46,3 +49,4 @@ function generateUrl(theMon1, theMon2){
 function generateMonUrlStub(theMon) {
     return theMon.speciesId + "-m-" + theMon.moveNumbersString;
 }
+
