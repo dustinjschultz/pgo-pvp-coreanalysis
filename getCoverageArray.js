@@ -2,10 +2,14 @@
 const puppeteer = require('puppeteer');
 const fs = require('fs');
 
+function getCoverageGrade() {
+    return document.getElementsByClassName('coverage')[0].getElementsByClassName('grade')[0].textContent;
+}
 
 (async () => {
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
+
 
     var meta;
     fs.readFile('./temp/metaWithNumbers.txt', 'utf8', function (err, data) {
@@ -13,8 +17,19 @@ const fs = require('fs');
         (async () => {
             var url = generateUrl(meta[0], meta[1]);
             await page.goto(url);
-            await page.screenshot({ path: 'test.png' });
+            //await page.screenshot({ path: 'test.png' });
+            page.waitForNavigation({ waitUntil: 'networkidle2' }) // works but makes bad output
 
+            // addScriptTag so it can be used on the page
+            await page.addScriptTag({ content: `${getCoverageGrade}` });
+
+            const out = await page.evaluateHandle(() => {
+                var grade = getCoverageGrade();
+                //var grade = document.getElementsByClassName('coverage')[0].getElementsByClassName('grade')[0].textContent;
+                return grade;
+            });
+
+            console.log(out._remoteObject.value);
             await browser.close();
         })();
     })
@@ -35,3 +50,4 @@ function generateUrl(theMon1, theMon2){
 function generateMonUrlStub(theMon) {
     return theMon.speciesId + "-m-" + theMon.moveNumbersString;
 }
+
