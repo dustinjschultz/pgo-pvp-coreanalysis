@@ -22,26 +22,6 @@ function getCoverageGradeFromPage() {
             var myCoverageArray = await createCoverageArray(meta);
             await browser.close();
         })();
-
-        //(async () => {
-        //    var url = generateUrl(meta[0], meta[1]);
-        //    await page.goto(url);
-        //    //await page.screenshot({ path: 'test.png' });
-        //    page.waitForNavigation({ waitUntil: 'networkidle2' }) // works but makes bad output
-
-        //    // addScriptTag so it can be used on the page
-        //    await page.addScriptTag({ content: `${getCoverageGradeFromPage}` });
-
-        //    const out = await page.evaluateHandle(() => {
-        //        var grade = getCoverageGradeFromPage();
-        //        //var grade = document.getElementsByClassName('coverage')[0].getElementsByClassName('grade')[0].textContent;
-        //        return grade;
-        //    });
-
-        //    console.log(out._remoteObject.value);
-        //    await browser.close();
-        //})();
-
     })
 })();
 
@@ -89,8 +69,7 @@ function create2dArray(theRows) {
 async function getCoverageForMetaPair(theMon1, theMon2) {
     var url = generateUrl(theMon1, theMon2);
     await page.goto(url);
-    await page.waitForNavigation({ waitUntil: 'networkidle2' }) // works but makes bad output
-    //page.waitForTimeout(10);
+    await page.waitForNavigation({ waitUntil: 'networkidle2' }) 
 
     // addScriptTag so it can be used on the page
     await page.addScriptTag({ content: `${getCoverageGradeFromPage}` });
@@ -100,7 +79,6 @@ async function getCoverageForMetaPair(theMon1, theMon2) {
         return grade;
     });
 
-    //console.log(out);
     return out._remoteObject.value;
 }
 
