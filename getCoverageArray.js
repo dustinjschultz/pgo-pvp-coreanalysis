@@ -28,7 +28,8 @@ function getCoverageGradeFromPage() {
     })
 })();
 
-function generateUrl(theMon1, theMon2){
+function generateUrl(theMon1, theMon2) {
+    // TODO: something is going wrong here
     // ex: http://localhost/pvpoke/src/team-builder/sunrise/1500/abomasnow-m-0-5-2%2Caltaria-m-0-3-2
     var myReturn = "http://localhost/pvpoke/src/team-builder/"
 
