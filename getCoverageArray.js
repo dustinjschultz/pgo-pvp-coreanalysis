@@ -2,7 +2,7 @@
 const puppeteer = require('puppeteer');
 const fs = require('fs');
 
-function getCoverageGrade() {
+function getCoverageGradeFromPage() {
     return document.getElementsByClassName('coverage')[0].getElementsByClassName('grade')[0].textContent;
 }
 
@@ -14,24 +14,31 @@ function getCoverageGrade() {
     var meta;
     fs.readFile('./temp/metaWithNumbers.txt', 'utf8', function (err, data) {
         meta = JSON.parse(data);
+
         (async () => {
-            var url = generateUrl(meta[0], meta[1]);
-            await page.goto(url);
-            //await page.screenshot({ path: 'test.png' });
-            page.waitForNavigation({ waitUntil: 'networkidle2' }) // works but makes bad output
-
-            // addScriptTag so it can be used on the page
-            await page.addScriptTag({ content: `${getCoverageGrade}` });
-
-            const out = await page.evaluateHandle(() => {
-                var grade = getCoverageGrade();
-                //var grade = document.getElementsByClassName('coverage')[0].getElementsByClassName('grade')[0].textContent;
-                return grade;
-            });
-
-            console.log(out._remoteObject.value);
+            var myCoverageArray = await createCoverageArray(meta);
             await browser.close();
         })();
+
+        //(async () => {
+        //    var url = generateUrl(meta[0], meta[1]);
+        //    await page.goto(url);
+        //    //await page.screenshot({ path: 'test.png' });
+        //    page.waitForNavigation({ waitUntil: 'networkidle2' }) // works but makes bad output
+
+        //    // addScriptTag so it can be used on the page
+        //    await page.addScriptTag({ content: `${getCoverageGradeFromPage}` });
+
+        //    const out = await page.evaluateHandle(() => {
+        //        var grade = getCoverageGradeFromPage();
+        //        //var grade = document.getElementsByClassName('coverage')[0].getElementsByClassName('grade')[0].textContent;
+        //        return grade;
+        //    });
+
+        //    console.log(out._remoteObject.value);
+        //    await browser.close();
+        //})();
+
     })
 })();
 
@@ -49,5 +56,45 @@ function generateUrl(theMon1, theMon2){
 
 function generateMonUrlStub(theMon) {
     return theMon.speciesId + "-m-" + theMon.moveNumbersString;
+}
+
+async function createCoverageArray(theMeta) {
+    var myMetaSize = theMeta.length;
+    var myCoverageArray = create2dArray(myMetaSize);
+
+    // addScriptTag so it can be used on the page
+    await page.addScriptTag({ content: `${getCoverageGradeFromPage}` });
+
+    for (var i = 0; i < myMetaSize; i++) {
+        for (var j = i + 1; j < myMetaSize; j++) {
+            myCoverageArray[i][j] = await getCoverageCoverageForMetaPair(theMeta[i], theMeta[j]);
+            console.log(theMeta[i].name + " x " + theMeta[j].name + ": " + myCoverageArray[i][j]);
+        }
+    }
+
+    return myCoverageArray;
+}
+
+function create2dArray(theRows) {
+    var myArray = [];
+
+    for (var i = 0; i < theRows; i++) {
+        myArray[i] = [];
+    }
+
+    return myArray;
+}
+
+async function getCoverageForMetaPair(theMon1, theMon2) {
+    var url = generateUrl(theMon1, theMon2);
+    await page.goto(url);
+    page.waitForNavigation({ waitUntil: 'networkidle2' }) // works but makes bad output
+
+    const out = await page.evaluateHandle(() => {
+        var grade = getCoverageGradeFromPage();
+        return grade;
+    });
+
+    return out._remoteObject.value;
 }
 
