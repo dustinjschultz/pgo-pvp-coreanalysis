@@ -20,6 +20,9 @@ function getCoverageGradeFromPage() {
 
         (async () => {
             var myCoverageArray = await createCoverageArray(meta);
+            fs.writeFile('./temp/metaCoverageArray.txt', myCoverageArray, (err) => {
+                if (err) throw err;
+            });
             await browser.close();
         })();
     })
