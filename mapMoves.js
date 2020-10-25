@@ -32,6 +32,9 @@ function mapMonDisplayDataToIdData(thePokemonEntry) {
     var moveNumber = getFastMoveNumberForPokemon(moveId, gamemasterPokemon);
     moveNumbersString += moveNumber + "-";
 
+    // TODO: going wrong here:
+    // need to add 1 for the "none" option
+    // also need to figure out how to account for Return move...
     var chargeMove1 = movesArray[1];
     moveId = findGamemasterMove(chargeMove1.trim());
     moveNumber = getChargeMoveNumberForPokemon(moveId, gamemasterPokemon);
