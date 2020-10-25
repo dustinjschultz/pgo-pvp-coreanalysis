@@ -10,8 +10,8 @@ function getCoverageGradeFromPage() {
 }
 
 (async () => {
-    //browser = await puppeteer.launch();
-    browser = await puppeteer.launch({ headless: false });
+    browser = await puppeteer.launch();
+    //browser = await puppeteer.launch({ headless: false });
     page = await browser.newPage();
 
     var meta;
@@ -29,7 +29,6 @@ function getCoverageGradeFromPage() {
 })();
 
 function generateUrl(theMon1, theMon2) {
-    // TODO: something is going wrong here
     // ex: http://localhost/pvpoke/src/team-builder/sunrise/1500/abomasnow-m-0-5-2%2Caltaria-m-0-3-2
     var myReturn = "http://localhost/pvpoke/src/team-builder/"
 
@@ -48,7 +47,6 @@ function generateMonUrlStub(theMon) {
 async function createCoverageArray(theMeta) {
     var myMetaSize = theMeta.length;
     var myCoverageArray = create2dArray(myMetaSize);
-
 
     for (var i = 0; i < myMetaSize; i++) {
         for (var j = i + 1; j < myMetaSize; j++) {
