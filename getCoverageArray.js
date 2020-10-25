@@ -10,8 +10,8 @@ function getCoverageGradeFromPage() {
 }
 
 (async () => {
-    browser = await puppeteer.launch();
-    //browser = await puppeteer.launch({ headless: false });
+    //browser = await puppeteer.launch();
+    browser = await puppeteer.launch({ headless: false });
     page = await browser.newPage();
 
     var meta;
@@ -51,7 +51,7 @@ async function createCoverageArray(theMeta) {
     for (var i = 0; i < myMetaSize; i++) {
         for (var j = i + 1; j < myMetaSize; j++) {
             myCoverageArray[i][j] = await getCoverageForMetaPair(theMeta[i], theMeta[j]);
-            console.log(theMeta[i].name + " x " + theMeta[j].name + ": " + myCoverageArray[i][j]);
+            console.log(theMeta[i].speciesId + " x " + theMeta[j].speciesId + ": " + myCoverageArray[i][j]);
         }
     }
 

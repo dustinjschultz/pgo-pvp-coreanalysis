@@ -1,4 +1,3 @@
-// Don't use. Just here in case it has valuable code samples
 
 const puppeteer = require('puppeteer');
 const fs = require('fs');
@@ -24,8 +23,8 @@ function getMoveFromSelectNode(theSelectNode, theChargeMoveId) {
 
 fs.readFile('./temp/meta.txt', 'utf8', function (err, data) {
     (async () => {
-        //browser = await puppeteer.launch();
-        browser = await puppeteer.launch({ headless: false });
+        browser = await puppeteer.launch();
+        //browser = await puppeteer.launch({ headless: false });
         page = await browser.newPage();
 
         var meta = JSON.parse(data);
@@ -64,13 +63,12 @@ async function setUpPage() {
 }
 
 async function getMonMoveNumbersString(thePokemonEntry) {
-    var myMoveNumbersString = await page.evaluate((optionSelector, thePokemonEntry)=> {
+    var myMoveNumbersString = await page.evaluate((optionSelector, thePokemonEntry) => {
         document.querySelector(optionSelector).setAttribute('selected', 'true');
         document.querySelector(optionSelector).dispatchEvent(new Event('change', { 'bubbles': true }))
         return getMoveNumbersFromPage(thePokemonEntry);
     }, `div.modal-content > div.poke > select.poke-select > option[value="${thePokemonEntry.speciesId}"]`, thePokemonEntry);
 
-    //var myMoveNumbersString = await getMoveNumbersFromPage(thePokemonEntry);
     thePokemonEntry.moveNumbersString = myMoveNumbersString;
 
 }
