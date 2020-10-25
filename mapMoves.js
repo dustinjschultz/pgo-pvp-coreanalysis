@@ -1,84 +1,61 @@
+// Don't use. Just here in case it has valuable code samples
 
+const puppeteer = require('puppeteer');
 const fs = require('fs');
-var gamemasterJson; // probably less overhead by NOT passing around this massive thing
+
+var browser;
+var page;
 
 fs.readFile('./temp/meta.txt', 'utf8', function (err, data) {
-    var meta = JSON.parse(data);
+    (async () => {
+        //browser = await puppeteer.launch();
+        browser = await puppeteer.launch({ headless: false });
+        page = await browser.newPage();
 
-    fs.readFile('C:/xampp/htdocs/pvpoke/src/data/gamemaster.json', 'utf8', function (err, data) {
-        gamemasterJson = JSON.parse(data);
-        mapMonsDisplayDataToIdData(meta);
+        var meta = JSON.parse(data);
+        await getMonsMoveNumbersString(meta);
 
         fs.writeFile('./temp/metaWithNumbers.txt', JSON.stringify(meta), (err) => {
             if (err) throw err;
         });
-    })
 
+        await browser.close();
+    })();
 })
 
-function mapMonsDisplayDataToIdData(thePokemonList) {
+
+async function getMonsMoveNumbersString(thePokemonList) {
     for (var currentPokemon of thePokemonList) {
-        mapMonDisplayDataToIdData(currentPokemon);
+        await getMonMoveNumbersString(currentPokemon);
     }
 }
 
-function mapMonDisplayDataToIdData(thePokemonEntry) {
-    var gamemasterPokemon = findGamemasterPokemon(thePokemonEntry.name);
-    var movesArray = thePokemonEntry.movesString.split(',');
-    var moveNumbersString = "";
+async function getMonMoveNumbersString(thePokemonEntry) {
+    var metaName = process.argv[2];
 
-    var fastMove = movesArray[0];
-    var moveId = findGamemasterMove(fastMove.trim());
-    var moveNumber = getFastMoveNumberForPokemon(moveId, gamemasterPokemon);
-    moveNumbersString += moveNumber + "-";
+    await page.goto("http://localhost/pvpoke/src/team-builder");
+    page.waitForNavigation({ waitUntil: 'networkidle2' }) 
 
-    // TODO: going wrong here:
-    // need to add 1 for the "none" option
-    // also need to figure out how to account for Return move...
-    var chargeMove1 = movesArray[1];
-    moveId = findGamemasterMove(chargeMove1.trim());
-    moveNumber = getChargeMoveNumberForPokemon(moveId, gamemasterPokemon);
-    moveNumbersString += moveNumber + "-";
+    await page.evaluate(optionSelector => {
+        return document.querySelector(optionSelector).setAttribute('selected', 'true');
+    }, `select.format-select > option[cup="${metaName}"]`);
+    console.log('blah');
 
-    var chargeMove2 = movesArray[2];
-    moveId = findGamemasterMove(chargeMove2.trim());
-    moveNumber = getChargeMoveNumberForPokemon(moveId, gamemasterPokemon);
-    moveNumbersString += moveNumber;
+    //await page.waitForNavigation({ waitUntil: 'networkidle2' });
 
-    thePokemonEntry.moveNumbersString = moveNumbersString;
-    thePokemonEntry.speciesId = gamemasterPokemon.speciesId;
+    //await page.$eval(`button.add-poke-btn`, el => el.click());
+    //await page.waitForNavigation({ waitUntil: 'networkidle2' });
+
+    //await page.select("select.poke-select", thePokemonEntry.speciesId);
+    //await page.waitForNavigation({ waitUntil: 'networkidle2' });
+
 }
 
-function findGamemasterPokemon(theName) {
-    for (var gmPokemon of gamemasterJson.pokemon) {
-        if (gmPokemon.speciesName == theName) {
-            return gmPokemon;
-        }
-    }
+function getFastMoveNumberFromPage(theFastMoveId) {
+
 }
 
-function findGamemasterMove(theName) {
-    for (var gmMove of gamemasterJson.moves) {
-        if (gmMove.name == theName) {
-            return gmMove.moveId;
-        }
-    }
+function getChargeMoveNumberFromPage(theChargeMoveId) {
+
 }
 
-function getFastMoveNumberForPokemon(theMoveId, theGmPokemon) {
-    return getMoveNumberForPokemon(theMoveId, theGmPokemon, "fast");
-}
-
-function getChargeMoveNumberForPokemon(theMoveId, theGmPokemon) {
-    return getMoveNumberForPokemon(theMoveId, theGmPokemon, "charged");
-}
-
-function getMoveNumberForPokemon(theMoveId, theGmPokemon, theMoveKind) {
-    var attributeName = theMoveKind + "Moves";
-    var movesArray = theGmPokemon[attributeName];
-    for (var i = 0; i < movesArray.length; i++) {
-        if (movesArray[i] == theMoveId) {
-            return i;
-        }
-    }
-}
