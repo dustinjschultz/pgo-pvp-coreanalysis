@@ -65,7 +65,8 @@ async function setUpPage() {
 
 async function getMonMoveNumbersString(thePokemonEntry) {
     await page.evaluate(optionSelector => {
-        return document.querySelector(optionSelector).setAttribute('selected', 'true');
+        document.querySelector(optionSelector).setAttribute('selected', 'true');
+        return document.querySelector(optionSelector).dispatchEvent(new Event('change', { 'bubbles': true }))
     }, `div.modal-content > div.poke > select.poke-select > option[value="${thePokemonEntry.speciesId}"]`);
 
     var myMoveNumbersString = await getMoveNumbers(thePokemonEntry);
