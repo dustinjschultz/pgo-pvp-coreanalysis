@@ -11,15 +11,15 @@ function getMoveNumbersFromPage(thePokemonEntry) {
     var myReturn = "";
     myReturn += getMoveFromSelectNode(myMoveSelectors[0], thePokemonEntry.fastMove);
     myReturn += "-";
-    myReturn += getMoveFromSelectNode(moMoveSelectors[1], thePokemonEntry.chargedMoves[0]);
+    myReturn += getMoveFromSelectNode(myMoveSelectors[1], thePokemonEntry.chargedMoves[0]);
     myReturn += "-";
-    myReturn += getMoveFromSelectNode(moMoveSelectors[1], thePokemonEntry.chargedMoves[1]);
+    myReturn += getMoveFromSelectNode(myMoveSelectors[1], thePokemonEntry.chargedMoves[1]);
     return myReturn;
 }
 
 function getMoveFromSelectNode(theSelectNode, theChargeMoveId) {
     var myChild = theSelectNode.querySelector(`option[value="${theChargeMoveId}"`);
-    return Array.prototype.indexOf.call(myChild.parent.children, myChild);
+    return Array.prototype.indexOf.call(myChild.parentElement.children, myChild);
 }
 
 fs.readFile('./temp/meta.txt', 'utf8', function (err, data) {
@@ -64,16 +64,14 @@ async function setUpPage() {
 }
 
 async function getMonMoveNumbersString(thePokemonEntry) {
-    await page.evaluate(optionSelector => {
+    var myMoveNumbersString = await page.evaluate((optionSelector, thePokemonEntry)=> {
         document.querySelector(optionSelector).setAttribute('selected', 'true');
-        return document.querySelector(optionSelector).dispatchEvent(new Event('change', { 'bubbles': true }))
-    }, `div.modal-content > div.poke > select.poke-select > option[value="${thePokemonEntry.speciesId}"]`);
+        document.querySelector(optionSelector).dispatchEvent(new Event('change', { 'bubbles': true }))
+        return getMoveNumbersFromPage(thePokemonEntry);
+    }, `div.modal-content > div.poke > select.poke-select > option[value="${thePokemonEntry.speciesId}"]`, thePokemonEntry);
 
-    var myMoveNumbersString = await getMoveNumbers(thePokemonEntry);
+    //var myMoveNumbersString = await getMoveNumbersFromPage(thePokemonEntry);
     thePokemonEntry.moveNumbersString = myMoveNumbersString;
 
 }
 
-function getMoveNumbers(thePokemonEntry) {
-
-}
