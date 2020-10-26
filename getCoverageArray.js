@@ -20,7 +20,7 @@ function getCoverageGradeFromPage() {
 
         (async () => {
             var myCoverageArray = await createCoverageArray(meta);
-            fs.writeFile('./temp/metaCoverageArray.txt', myCoverageArray, (err) => {
+            fs.writeFile('./temp/metaCoverageArray.txt', JSON.stringify(myCoverageArray), (err) => {
                 if (err) throw err;
             });
             await browser.close();
@@ -53,7 +53,10 @@ async function createCoverageArray(theMeta) {
             myCoverageArray[i][j] = await getCoverageForMetaPair(theMeta[i], theMeta[j]);
             console.log(theMeta[i].speciesId + " x " + theMeta[j].speciesId + ": " + myCoverageArray[i][j]);
         }
+        myCoverageArray[i][i] = "X";
     }
+
+
 
     return myCoverageArray;
 }
