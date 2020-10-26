@@ -31,7 +31,6 @@ fs.readFile('./temp/meta.txt', 'utf8', function (err, data) {
         await setUpPage();
 
         await getMonsMoveNumbersString(meta);
-        console.log(meta);
 
         fs.writeFile('./temp/metaWithNumbers.txt', JSON.stringify(meta), (err) => {
             if (err) throw err;
