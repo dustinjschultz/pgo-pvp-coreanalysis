@@ -38,7 +38,16 @@
             nodes: nodes,
             edges: edges,
         };
-        var options = {};
+        var options = {
+            "edges": {
+                "smooth": {
+                    "type": "continuous",
+                    "forceDirection": "none",
+                    "roundness": 1
+                }
+            }
+        }
+        //var options = {};
         var network = new vis.Network(container, data, options);
     }
 
