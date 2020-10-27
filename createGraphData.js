@@ -14,10 +14,11 @@ fs.readFile('./temp/metaCoverageArray.txt', 'utf8', function (err, data) {
         var nodes = createNodes(meta);
         var edges = createEdges(metaCoverageArray);
 
-        fs.writeFile('./temp/nodes.txt', JSON.stringify(nodes), (err) => {
-            fs.writeFile('./temp/edges.txt', JSON.stringify(edges), (err) => {
+        var graphData = new Object();
+        graphData.nodes = nodes;
+        graphData.edges = edges;
 
-            });
+        fs.writeFile('./temp/graphData.txt', JSON.stringify(graphData), (err) => {
         });
 
     })
