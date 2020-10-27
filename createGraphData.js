@@ -1,7 +1,23 @@
 
 const fs = require('fs');
 
-//// create an array with nodes
+
+var metaCoverageArray;
+var meta;
+
+
+fs.readFile('./temp/metaCoverageArray.txt', 'utf8', function (err, data) {
+    metaCoverageArray = JSON.parse(data);
+    fs.readFile('./temp/metaWithNumbers.txt', 'utf8', function (err, data) {
+        meta = JSON.parse(data);
+
+        var nodes = createNodes(meta);
+        var edges = createEdges(metaCoverageArray);
+        console.log(edges);
+
+    })
+})
+
 //var nodes = new vis.DataSet([
 //    { id: 1, label: "Node 1" },
 //    { id: 2, label: "Node 2" },
@@ -9,30 +25,6 @@ const fs = require('fs');
 //    { id: 4, label: "Node 4" },
 //    { id: 5, label: "Node 5" },
 //]);
-
-//var edges = new vis.DataSet([
-//    { from: 1, to: 3 },
-//    { from: 1, to: 2 },
-//    { from: 2, to: 4 },
-//    { from: 2, to: 5 },
-//    { from: 2, to: 3 },
-//    { from: 3, to: 3 },
-//]);
-
-var metaCoverageArray;
-var meta;
-
-
-fs.readFile('./temp/metaCoverageArray.txt', 'utf8', function (err, data) {
-    metaCoverageArray = data;
-    fs.readFile('./temp/metaWithNumbers.txt', 'utf8', function (err, data) {
-        meta = JSON.parse(data);
-
-        var nodes = createNodes(meta);
-        console.log(nodes);
-
-    })
-})
 
 function createNodes(theMeta) {
     var myNodes = [];
@@ -48,3 +40,32 @@ function createNodes(theMeta) {
     return myNodes;
 }
 
+//var edges = new vis.DataSet([
+//    { from: 1, to: 3 },
+//    { from: 1, to: 2 },
+//    { from: 2, to: 4 },
+//    { from: 2, to: 5 },
+//    { from: 2, to: 3 },
+//    { from: 3, to: 3 },
+//]);
+
+function createEdges(theMetaCoverageArray) {
+    var myEdges = [];
+
+    var myMetaSize = theMetaCoverageArray[0].length;
+    console.log(myMetaSize);
+    for (var i = 0; i < myMetaSize; i++) {
+        for (var j = i + 1; j < myMetaSize; j++) {
+            var myCurrentGrade = theMetaCoverageArray[i][j];
+            //console.log(myCurrentGrade);
+            if (myCurrentGrade == "A" || myCurrentGrade == "B") {
+                var myEdge = new Object();
+                myEdge.from = i;
+                myEdge.to = j;
+                myEdges.push(myEdge);
+            }
+        }
+    }
+
+    return myEdges;
+}
