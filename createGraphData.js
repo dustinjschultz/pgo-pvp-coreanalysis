@@ -13,7 +13,12 @@ fs.readFile('./temp/metaCoverageArray.txt', 'utf8', function (err, data) {
 
         var nodes = createNodes(meta);
         var edges = createEdges(metaCoverageArray);
-        console.log(edges);
+
+        fs.writeFile('./temp/nodes.txt', JSON.stringify(nodes), (err) => {
+            fs.writeFile('./temp/edges.txt', JSON.stringify(edges), (err) => {
+
+            });
+        });
 
     })
 })
@@ -53,7 +58,6 @@ function createEdges(theMetaCoverageArray) {
     var myEdges = [];
 
     var myMetaSize = theMetaCoverageArray[0].length;
-    console.log(myMetaSize);
     for (var i = 0; i < myMetaSize; i++) {
         for (var j = i + 1; j < myMetaSize; j++) {
             var myCurrentGrade = theMetaCoverageArray[i][j];
