@@ -1,0 +1,66 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <script src="https://unpkg.com/cytoscape/dist/cytoscape.min.js"></script>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+<body>
+    <input type="file" id="file-selector">
+
+    <div id="cy"></div>
+</body>
+
+</html>
+
+<script type="text/javascript"
+        src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js">
+</script>
+<script>
+    const fileSelector = document.getElementById('file-selector');
+    fileSelector.addEventListener('change', (event) => {
+        const fileList = event.target.files;
+        var reader = new FileReader();
+        reader.addEventListener('load', (event) => {
+            populate(JSON.parse(event.target.result))
+        });
+        reader.readAsText(fileList[0]);
+    });
+
+
+    function populate(theGraphData) {
+        console.log(theGraphData);
+        var cy = cytoscape({
+            container: document.getElementById('cy'),
+            elements: theGraphData,
+            style: [
+                {
+                    selector: 'node',
+                    style: {
+                        shape: 'hexagon',
+                        'background-color': 'red',
+                        label: 'data(id)'
+                    }
+                }],
+            //layout: {
+            //    name: 'grid'
+            //}
+        });
+
+        cy.layout({
+            name: 'circle'
+        }).run();
+    }
+
+</script>
+
+<style type="text/css">
+    #cy {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        /*top: 0px;*/
+        left: 0px;
+    }
+</style> 
