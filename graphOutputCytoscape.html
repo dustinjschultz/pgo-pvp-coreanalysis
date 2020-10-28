@@ -14,9 +14,6 @@
 
 </html>
 
-<script type="text/javascript"
-        src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js">
-</script>
 <script>
     const fileSelector = document.getElementById('file-selector');
     fileSelector.addEventListener('change', (event) => {
@@ -30,7 +27,6 @@
 
 
     function populate(theGraphData) {
-        console.log(theGraphData);
         var cy = cytoscape({
             container: document.getElementById('cy'),
             elements: theGraphData,
@@ -40,16 +36,17 @@
                     style: {
                         shape: 'hexagon',
                         'background-color': 'red',
-                        label: 'data(id)'
+                        label: 'data(label)'
                     }
+                    // TODO: figure out how to make edge colors random or a gradient
                 }],
-            //layout: {
-            //    name: 'grid'
-            //}
         });
 
         cy.layout({
-            name: 'circle'
+            name: 'circle',
+            fit: false,
+            padding: 5000,
+            avoidOverlap: true,
         }).run();
     }
 
