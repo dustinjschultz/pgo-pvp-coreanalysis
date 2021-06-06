@@ -23,8 +23,8 @@ function getMoveFromSelectNode(theSelectNode, theChargeMoveId) {
 
 fs.readFile('./temp/meta.txt', 'utf8', function (err, data) {
     (async () => {
-        browser = await puppeteer.launch();
-        //browser = await puppeteer.launch({ headless: false });
+        //browser = await puppeteer.launch();
+        browser = await puppeteer.launch({ headless: false });
         page = await browser.newPage();
 
         var meta = JSON.parse(data);
