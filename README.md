@@ -5,7 +5,7 @@ To run:
 
 Have your local PvPoke instance running (see their GitHub: https://github.com/pvpoke/pvpoke)
 
-Identify your meta, and the name PvPoke uses on their site (Ranking page's select.format-select > option.cup="xxx")
+Identify your meta, and the name PvPoke uses on their site (Ranking page's select.format-select > option[cup]="xxx")
 
 Run the following 4 scripts, with 3 of them psasing in your meta name (Example, "venture")
 
