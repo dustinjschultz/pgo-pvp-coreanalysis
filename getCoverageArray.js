@@ -47,11 +47,15 @@ function generateMonUrlStub(theMon) {
 async function createCoverageArray(theMeta) {
     var myMetaSize = theMeta.length;
     var myCoverageArray = create2dArray(myMetaSize);
+    var myTotalArraySlotsToFill = combinations(myMetaSize, 2);
+    var mySlotsFilledCounter = 1; // could be calculated as I go, but this is easier
 
     for (var i = 0; i < myMetaSize; i++) {
         for (var j = i + 1; j < myMetaSize; j++) {
             myCoverageArray[i][j] = await getCoverageForMetaPair(theMeta[i], theMeta[j]);
-            console.log(theMeta[i].speciesId + " x " + theMeta[j].speciesId + ": " + myCoverageArray[i][j]);
+            console.log(theMeta[i].speciesId + " x " + theMeta[j].speciesId + ": " + myCoverageArray[i][j]
+                + " progress: " + mySlotsFilledCounter + "/" + myTotalArraySlotsToFill);
+            mySlotsFilledCounter++;
         }
         myCoverageArray[i][i] = "X";
     }
@@ -87,3 +91,23 @@ async function getCoverageForMetaPair(theMon1, theMon2) {
     return out._remoteObject.value;
 }
 
+function product_Range(a, b) {
+    // https://www.w3resource.com/javascript-exercises/javascript-math-exercise-42.php
+    var prd = a, i = a;
+
+    while (i++ < b) {
+        prd *= i;
+    }
+    return prd;
+}
+
+
+function combinations(n, r) {
+    if (n == r) {
+        return 1;
+    }
+    else {
+        r = (r < n - r) ? n - r : r;
+        return product_Range(r + 1, n) / product_Range(1, n - r);
+    }
+}
