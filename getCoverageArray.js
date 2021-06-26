@@ -20,9 +20,9 @@ function getCoverageGradeFromPage() {
 
         (async () => {
             var myCoverageArray = await createCoverageArray(meta);
-            fs.writeFile('./temp/metaCoverageArray.txt', JSON.stringify(myCoverageArray), (err) => {
-                if (err) throw err;
-            });
+            //fs.writeFile('./temp/metaCoverageArray.txt', JSON.stringify(myCoverageArray), (err) => {
+            //    if (err) throw err;
+            //});
             await browser.close();
         })();
     })
@@ -56,6 +56,10 @@ async function createCoverageArray(theMeta) {
             console.log(theMeta[i].speciesId + " x " + theMeta[j].speciesId + ": " + myCoverageArray[i][j]
                 + " progress: " + mySlotsFilledCounter + "/" + myTotalArraySlotsToFill);
             mySlotsFilledCounter++;
+
+            fs.writeFile('./temp/metaCoverageArray.txt', JSON.stringify(myCoverageArray), (err) => {
+                if (err) throw err;
+            });
         }
         myCoverageArray[i][i] = "X";
     }

@@ -19,7 +19,7 @@ const fs = require('fs');
     var my2dArray = fill2dArray(create2dArray(30));
 
     console.time("write")
-    fs.writeFile('./temp/fileWriteExperiment.txt', JSON.stringify(my2dArray), (err) => {
+    fs.writeFile('../temp/fileWriteExperiment.txt', JSON.stringify(my2dArray), (err) => {
         if (err) throw err;
         console.timeEnd("write")
     });
@@ -34,7 +34,7 @@ function fill2dArray(the2dArray) {
             the2dArray[i][j] = Math.floor(Math.random() * 10);
         }
     }
-
+    return the2dArray;
 }
 
 function create2dArray(theRows) {
