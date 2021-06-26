@@ -50,6 +50,18 @@ async function createCoverageArray(theMeta) {
     var myTotalArraySlotsToFill = combinations(myMetaSize, 2);
     var mySlotsFilledCounter = 1; // could be calculated as I go, but this is easier
 
+    // changes for 023_add_resume_logic: (I think, only thought about this, haven't tried)
+    // add a part at the startup here that's an if(isResume) // based on the command line args 
+    // https://stackoverflow.com/questions/4351521/how-do-i-pass-command-line-arguments-to-a-node-js-program
+    // based on that if, set startingOuter and startingInner and mySlotsFilledCounter to 0, 0, 1 respectively
+    // or else do a calc for them
+    // to calc startingOuter, need a method: isRowComplete(the1dArray) : boolean
+    // call this method on rows 0-n until a row returns true
+    // to calc startingInner, determine startingOuter, then for the incomplete row, need a method:
+    // getRowCompletion(the1dArray) : int
+    // where int is the index of the last filled position
+    // now that the starting positions are esttablished, change the loop variables to start at startingOuter and startingInner
+
     for (var i = 0; i < myMetaSize; i++) {
         myCoverageArray[i][i] = "X";
 
