@@ -51,6 +51,8 @@ async function createCoverageArray(theMeta) {
     var mySlotsFilledCounter = 1; // could be calculated as I go, but this is easier
 
     for (var i = 0; i < myMetaSize; i++) {
+        myCoverageArray[i][i] = "X";
+
         for (var j = i + 1; j < myMetaSize; j++) {
             myCoverageArray[i][j] = await getCoverageForMetaPair(theMeta[i], theMeta[j]);
             console.log(theMeta[i].speciesId + " x " + theMeta[j].speciesId + ": " + myCoverageArray[i][j]
@@ -61,7 +63,6 @@ async function createCoverageArray(theMeta) {
                 if (err) throw err;
             });
         }
-        myCoverageArray[i][i] = "X";
     }
 
 
