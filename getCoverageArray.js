@@ -48,7 +48,10 @@ async function createCoverageArray(theMeta) {
     var myMetaSize = theMeta.length;
     var myCoverageArray = create2dArray(myMetaSize);
     var myTotalArraySlotsToFill = combinations(myMetaSize, 2);
-    var mySlotsFilledCounter = 1; // could be calculated as I go, but this is easier
+    var mySlotsFilledCounter = 0; // could be calculated as I go, but this is easier
+    var myStartingOuter = 0;
+    var myStartingInner = 1;
+    var myIsResumeFlag = process.argv[3] == "resume"; // ex call: `node getCoverageArray venture resume`
 
     // changes for 023_add_resume_logic: (I think, only thought about this, haven't tried)
     // add a part at the startup here that's an if(isResume) // based on the command line args 
@@ -61,23 +64,42 @@ async function createCoverageArray(theMeta) {
     // getRowCompletion(the1dArray) : int
     // where int is the index of the last filled position
     // now that the starting positions are esttablished, change the loop variables to start at startingOuter and startingInner
+    if (myIsResumeFlag) {
+        myCoverageArray = getMetaCoverageArrayFromFile();
 
-    for (var i = 0; i < myMetaSize; i++) {
+        for (var i = 0; i < myMetaSize; i++) {
+            if (!isRowComplete(myCoverageArray[i])) {
+                myStartingOuter = i;
+                break;
+            }
+        }
+        myStartingInner = getNextRowSlotToFill(myCoverageArray[i], i);
+
+        // count occurrences of [A-F]
+        mySlotsFilledCounter = (myCoverageArray.toString().match(/[A-F]/g) || []).length;
+    }
+
+    for (var i = myStartingOuter; i < myMetaSize; i++) {
         myCoverageArray[i][i] = "X";
 
-        for (var j = i + 1; j < myMetaSize; j++) {
+        if (!myIsResumeFlag) {
+            myStartingInner = i + 1;
+        }
+
+        for (var j = myStartingInner; j < myMetaSize; j++) {
             myCoverageArray[i][j] = await getCoverageForMetaPair(theMeta[i], theMeta[j]);
+            mySlotsFilledCounter++;
             console.log(theMeta[i].speciesId + " x " + theMeta[j].speciesId + ": " + myCoverageArray[i][j]
                 + " progress: " + mySlotsFilledCounter + "/" + myTotalArraySlotsToFill);
-            mySlotsFilledCounter++;
 
             fs.writeFile('./temp/metaCoverageArray.txt', JSON.stringify(myCoverageArray), (err) => {
                 if (err) throw err;
             });
+
+            // it's only a "resume" the first iteration, so stop using resume logic after an interation
+            myIsResumeFlag = false;
         }
     }
-
-
 
     return myCoverageArray;
 }
@@ -127,4 +149,34 @@ function combinations(n, r) {
         r = (r < n - r) ? n - r : r;
         return product_Range(r + 1, n) / product_Range(1, n - r);
     }
+}
+
+function isRowComplete(the1dArray, theExpectedLength) {
+    return the1dArray.length == theExpectedLength;
+}
+
+/**
+ * 
+ * @param {any} the1dArray
+ * @param {any} theRowNumber 0-indexed
+ */
+function getNextRowSlotToFill(the1dArray, theRowNumber) {
+    // this isn't quite as straight forward as getting the length
+    // a row's first entry (the "X") fills the nulls to the left
+    // so in the case where a row hasn't been started, its length is 0
+    // but we don't start filling at 0 ever, we start at theRowNumber+1
+    // example: [[X, A, B], [null, X, A], []]
+    myNextSlot = -1;
+    if (the1dArray.length == 0) {
+        // since the first rowNumber slots are just null or 'X', we don't care
+        myNextSlot = theRowNumber + 1;
+    } else {
+        myNextSlot = the1dArray.length;
+    }
+    return myNextSlot;
+}
+
+function getMetaCoverageArrayFromFile() {
+    var myFileContents = fs.readFileSync('./temp/metaCoverageArray.txt', { encoding: 'utf8', flag: 'r' }) 
+    return JSON.parse(myFileContents);
 }
