@@ -53,15 +53,12 @@ async function createCoverageArray(theMeta) {
     var myStartingInner = 1;
     var myIsResumeFlag = process.argv[3] == "resume"; // ex call: `node getCoverageArray venture resume`
 
-    // TODO: test resume logic on:
-    // completely empty
-    // non-first row midway resume
-    // non-first row start of row resume
     if (myIsResumeFlag) {
         myCoverageArray = getMetaCoverageArrayFromFile();
 
         for (var i = 0; i < myMetaSize; i++) {
-            if (!isRowComplete(myCoverageArray[i])) {
+            myExpectedSize = myMetaSize - i;
+            if (!isRowComplete(myCoverageArray[i], myExpectedSize)) {
                 myStartingOuter = i;
                 break;
             }
