@@ -50,7 +50,7 @@ async function createCoverageArray(theMeta) {
     var myTotalArraySlotsToFill = combinations(myMetaSize, 2);
     var mySlotsFilledCounter = 0; // could be calculated as I go, but this is easier
     var myStartingOuter = 0;
-    var myStartingInner = 1;
+    var myStartingInner = 1; // can start at 1 since [0,0] is always "X"
     var myIsResumeFlag = process.argv[3] == "resume"; // ex call: `node getCoverageArray venture resume`
 
     if (myIsResumeFlag) {
