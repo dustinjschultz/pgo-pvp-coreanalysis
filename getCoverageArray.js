@@ -109,7 +109,9 @@ function create2dArray(theRows) {
 async function getCoverageForMetaPair(theMon1, theMon2) {
     var url = generateUrl(theMon1, theMon2);
     await page.goto(url);
-    await page.waitForNavigation({ waitUntil: 'networkidle2' }) 
+    //await page.waitForNavigation({ waitUntil: 'networkidle2' }) 
+    //await page.waitForNavigation({ waitUntil: 'networkidle0' }) 
+    await page.waitForSelector('.coverage .grade', {visible: true}) 
 
     // addScriptTag so it can be used on the page
     await page.addScriptTag({ content: `${getCoverageGradeFromPage}` });
