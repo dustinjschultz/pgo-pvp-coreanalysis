@@ -38,7 +38,6 @@ function generateUrl(theMon1, theMon2) {
     var mon1UrlStub = generateMonUrlStub(theMon1);
     var mon2UrlStub = generateMonUrlStub(theMon2);
 
-    //myReturn += metaName + "/1500/" + mon1UrlStub + "%2C" + mon2UrlStub;
     myReturn += `${metaName}/${metaCp}/${mon1UrlStub}%2C${mon2UrlStub}`;
     return myReturn;
 }
