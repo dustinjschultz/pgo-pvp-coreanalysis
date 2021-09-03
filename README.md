@@ -9,15 +9,17 @@ Copy .env-dist named as .env and set the values accordingly
 
 Identify your meta, and the name PvPoke uses on their site (Ranking page's select.format-select > option[cup]="xxx")
 
-Run the following 4 scripts, with 3 of them psasing in your meta name (Example, "venture")
+Set .env RUN_META_NAME and RUN_META_CP to your meta name and CP (Example: "venture", 1500)
 
-node getMeta venture
+Run the following 4 scripts 
 
-node mapMoves venture
+node getMeta.js
 
-node getCoverageArray venture
+node mapMoves.js
 
-node createGraphData
+node getCoverageArray.js // optionally if it's a resume: node getCoverageArray.js resume
+
+node createGraphData.js
 
 Open the data viewing web-page: "graphOutputCytoscape.html"
 

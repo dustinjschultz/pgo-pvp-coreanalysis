@@ -33,11 +33,12 @@ function generateUrl(theMon1, theMon2) {
     // ex: http://localhost/pvpoke/src/team-builder/sunrise/1500/abomasnow-m-0-5-2%2Caltaria-m-0-3-2
     var myReturn = `${process.env.PVPOKE_LOCALHOST_URL}team-builder/`
 
-    var metaName = process.argv[2];
+    var metaName = process.env.RUN_META_NAME;
+    var metaCp = process.env.RUN_META_CP;
     var mon1UrlStub = generateMonUrlStub(theMon1);
     var mon2UrlStub = generateMonUrlStub(theMon2);
 
-    myReturn += metaName + "/1500/" + mon1UrlStub + "%2C" + mon2UrlStub;
+    myReturn += `${metaName}/${metaCp}/${mon1UrlStub}%2C${mon2UrlStub}`;
     return myReturn;
 }
 
@@ -52,7 +53,7 @@ async function createCoverageArray(theMeta) {
     var mySlotsFilledCounter = 0; // could be calculated as I go, but this is easier
     var myStartingOuter = 0;
     var myStartingInner = 1; // can start at 1 since [0,0] is always "X"
-    var myIsResumeFlag = process.argv[3] == "resume"; // ex call: `node getCoverageArray venture resume`
+    var myIsResumeFlag = process.argv[2] == "resume"; // ex call: `node getCoverageArray resume`
 
     if (myIsResumeFlag) {
         myCoverageArray = getMetaCoverageArrayFromFile();

@@ -54,7 +54,7 @@ async function setUpPage() {
     await page.addScriptTag({ content: `${getMoveNumbersFromPage}` });
     await page.addScriptTag({ content: `${getMoveFromSelectNode}` });
 
-    var metaName = process.argv[2];
+    var metaName = process.env.RUN_META_NAME;
     await page.evaluate(optionSelector => {
         return document.querySelector(optionSelector).setAttribute('selected', 'true');
     }, `select.format-select > option[cup="${metaName}"]`);
