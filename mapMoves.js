@@ -1,6 +1,7 @@
 
 const puppeteer = require('puppeteer');
 const fs = require('fs');
+require('dotenv').config()
 
 var browser;
 var page;
@@ -48,7 +49,7 @@ async function getMonsMoveNumbersString(thePokemonList) {
 }
 
 async function setUpPage() {
-    await page.goto("http://localhost/pvpoke/src/team-builder");
+    await page.goto(`${process.env.PVPOKE_LOCALHOST_URL}team-builder`);
     page.waitForNavigation({ waitUntil: 'networkidle2' });
     await page.addScriptTag({ content: `${getMoveNumbersFromPage}` });
     await page.addScriptTag({ content: `${getMoveFromSelectNode}` });

@@ -1,6 +1,7 @@
 
 const puppeteer = require('puppeteer');
 const fs = require('fs');
+require('dotenv').config()
 
 var browser;
 var page;
@@ -30,7 +31,7 @@ function getCoverageGradeFromPage() {
 
 function generateUrl(theMon1, theMon2) {
     // ex: http://localhost/pvpoke/src/team-builder/sunrise/1500/abomasnow-m-0-5-2%2Caltaria-m-0-3-2
-    var myReturn = "http://localhost/pvpoke/src/team-builder/"
+    var myReturn = `${process.env.PVPOKE_LOCALHOST_URL}team-builder/`
 
     var metaName = process.argv[2];
     var mon1UrlStub = generateMonUrlStub(theMon1);
