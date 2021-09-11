@@ -1,10 +1,4 @@
 
-// TODO: define a graphData which is an array of Nodes and array of Edges
-// TODO: define Node
-// TODO: define Edge
-// TODO: figure out how to do the above since they're anonymous types
-
-
 class MonData {
     speciesId = "";
     fastMove = "";
