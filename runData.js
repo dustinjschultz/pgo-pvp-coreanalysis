@@ -27,4 +27,12 @@ class RunData {
     constructor(mons) {
         this.mons = mons;
     }
+
+    getMonNames() {
+        var myReturn = [];
+        for (var mon of this.mons) {
+            myReturn.push(mon.speciesId);
+        }
+        return myReturn;
+    }
 }
