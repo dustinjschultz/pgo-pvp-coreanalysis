@@ -1,3 +1,2 @@
-cd C:\xampp\htdocs\pvpoke
-git pull
-cd C:\codingSnipets\pgo-pvp-coreanalysis\pgo-pvp-coreanalysis
+
+git -C C:\xampp\htdocs\pvpoke pull
