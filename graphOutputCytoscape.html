@@ -43,7 +43,9 @@
         });
 
         cy.layout({
-            name: 'circle',
+            name: 'cose',
+			nodeRepulsion: function( node ){ return 5000000; },
+			gravity: .8,
             fit: false,
             padding: 5000,
             avoidOverlap: true,
