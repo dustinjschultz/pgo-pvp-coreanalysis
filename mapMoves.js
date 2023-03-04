@@ -24,8 +24,8 @@ function getMoveFromSelectNode(theSelectNode, theChargeMoveId) {
 
 fs.readFile('./temp/meta.txt', 'utf8', function (err, data) {
     (async () => {
-        browser = await puppeteer.launch();
-        //browser = await puppeteer.launch({ headless: false });
+        //browser = await puppeteer.launch();
+        browser = await puppeteer.launch({ headless: false });
         page = await browser.newPage();
 
         var meta = JSON.parse(data);
@@ -49,8 +49,10 @@ async function getMonsMoveNumbersString(thePokemonList) {
 }
 
 async function setUpPage() {
-    await page.goto(`${process.env.PVPOKE_LOCALHOST_URL}team-builder`);
-    page.waitForNavigation({ waitUntil: 'networkidle2' });
+	await Promise.all([
+		page.goto(`${process.env.PVPOKE_LOCALHOST_URL}team-builder`),
+		page.waitForNavigation({ waitUntil: 'networkidle2' }),
+	]);
     await page.addScriptTag({ content: `${getMoveNumbersFromPage}` });
     await page.addScriptTag({ content: `${getMoveFromSelectNode}` });
 
